@@ -44,7 +44,13 @@ module.exports = function (req, res) {
 			if (!includeCount) {
 				return next(null, 0);
 			}
-			query.countDocuments(next);
+			if (query.countDocuments) {
+				// mongoose 5.2 and above
+				query.countDocuments(next);
+			} else {
+				// mongoose 5 and below
+				query.count(next);
+			}
 		},
 		function (count, next) {
 			if (!includeResults) {
